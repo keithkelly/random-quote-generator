@@ -21,7 +21,7 @@ function printQuote() {
 	quote += '<p class="quote">' + getQuote.quote + '</p>';
 	quote += '<p class="source">' + getQuote.source; 
 
-	if( getQuote.citation && getQuote.year ) {
+	if( getQuote.citation ) {
 		quote += '<span class="citation">' + getQuote.citation + '</span>';
 	}
 
