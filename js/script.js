@@ -1,3 +1,7 @@
+// Variable to hold used quotes
+var usedQuotes = [];
+var timer;
+
 // Returns random number between 0 and the limit (not including limit number)
 function randomNumber(limit) {
 	return Math.floor(Math.random() * limit);
@@ -8,15 +12,43 @@ function randomBackgroundColor() {
 	return 'rgb(' + randomNumber(256) + ',' + randomNumber(256) + ',' + randomNumber(256) + ')';
 }
 
-// Returns a random quote from the quotes array
-function getRandomQuote() {
-	var quoteIndex = randomNumber(quotes.length);
-	return quotes[quoteIndex];
+// Refreshes quote every n seconds
+function refreshQuote() {
+	timer = setInterval(printQuote, 5000);
+}
+
+// Resets the quote refresh timer after 'Show another quote' button is clicked
+function resetQuoteRefresh() {
+	clearInterval(timer);
+	refreshQuote();
 }
 
 // Removes quote object passed to it from array
 function removeQuote(quote) {
-	return quotes.splice(quotes.indexOf(quote), 1);
+	quotes.splice(quotes.indexOf(quote), 1);
+	usedQuotes.push(quote);
+}
+
+// Adds quotes back to original array and resets the usedQuotes container
+function resetQuotes() {
+	quotes = usedQuotes;
+	usedQuotes = [];
+}
+
+// Returns a random quote from the quotes array
+function getRandomQuote() {
+	var quote = quotes[randomNumber(quotes.length)];
+
+	// Remove quote from array and log the quote
+	removeQuote(quote);
+	console.log('Quotes remaining: ', quotes.length, '| Quote: ', quote.quote);
+
+	// If the array is empty then reset
+	if(quotes.length === 0) {
+		resetQuotes();
+	}
+
+	return quote;
 }
 
 // Prints random quote generated from random quote function
@@ -43,13 +75,15 @@ function printQuote() {
 	document.body.style.backgroundColor = randomBackgroundColor();
 
 	// Show quote on page
-	document.getElementById('quote-box').innerHTML = quote;
-
-	// Log quote to console then remove from array
-	console.log(getQuote);
-	removeQuote(getQuote);
+	document.getElementById('quote-box').innerHTML = printQuote;
 }
+
+// Initiate the refresh quote intervals
+window.onload = refreshQuote();
 
 // event listener to respond to "Show another quote" button clicks
 // when user clicks anywhere on the button, the "printQuote" function is called
-document.getElementById('loadQuote').addEventListener("click", printQuote, false);
+document.getElementById('loadQuote').addEventListener("click", function() {
+	printQuote();
+	resetQuoteRefresh();
+}, false);
