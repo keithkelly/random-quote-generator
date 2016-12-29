@@ -41,7 +41,6 @@ function getRandomQuote() {
 
 	// Remove quote from array and log the quote
 	removeQuote(quote);
-	console.log('Quotes remaining: ', quotes.length, '| Quote: ', quote.quote);
 
 	// If the array is empty then reset
 	if(quotes.length === 0) {
